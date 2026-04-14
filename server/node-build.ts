@@ -1,6 +1,6 @@
 import path from "node:path";
 import { createServer } from "./index";
-import * as express from "express";
+import express from "express";
 import { seedAdmin } from "./seed/adminSeed";
 
 const port = process.env.PORT || 3000;
@@ -33,10 +33,11 @@ async function start() {
       res.sendFile(path.join(distPath, "index.html"));
     });
 
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log(`🚀 Fusion Starter server running on port ${port}`);
       console.log(`📱 Frontend: http://localhost:${port}`);
       console.log(`🔧 API: http://localhost:${port}/api`);
+      console.log(`✅ Server is ready to accept connections`);
     });
 
     // Graceful shutdown
