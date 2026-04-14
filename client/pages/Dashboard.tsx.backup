@@ -602,15 +602,14 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Monthly Expenses Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="modern-card">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-1">Monthly Expenses</h2>
-                <p className="text-sm text-muted-foreground">Track your spending patterns</p>
-              </div>
-              {monthlyExpenses.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+          {/* Monthly Expenses Chart - Full Width */}
+          <div className="modern-card">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-1">📊 Monthly Expenses</h2>
+              <p className="text-sm text-muted-foreground">Track your spending patterns</p>
+            </div>
+            {monthlyExpenses.length > 0 ? (
+              <ResponsiveContainer width="100%" height={340}>
                   <BarChart
                     data={monthlyExpenses}
                     margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
@@ -668,18 +667,18 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Category Breakdown Pie Chart */}
-            <div className="glass-card p-6 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet/5 via-transparent to-transparent pointer-events-none"></div>
-            <div className="relative z-10">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-violet-500 to-primary-500 bg-clip-text text-transparent">Category Breakdown</h2>
-                <p className="text-sm text-foreground/50 mt-1">🥧 Top spending categories</p>
-              </div>
+          {/* Category Breakdown Pie Chart - Full Width */}
+          <div className="modern-card">
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-1">🥧 Category Breakdown</h2>
+              <p className="text-sm text-muted-foreground">Top spending categories</p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {expenseStats.length > 0 ? (
                 <>
-                  <ResponsiveContainer width="100%" height={240}>
+                  <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
                         data={expenseStats}
@@ -710,7 +709,7 @@ export default function Dashboard() {
                       />
                     </PieChart>
                   </ResponsiveContainer>
-                  <div className="space-y-2 mt-4">
+                  <div className="space-y-2">
                     {expenseStats.map((stat, index) => (
                       <div key={stat._id} className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2">
@@ -726,7 +725,7 @@ export default function Dashboard() {
                   </div>
                 </>
               ) : (
-                <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg">
+                <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg col-span-2">
                   <div className="text-center">
                     <p className="text-5xl mb-3">🥧</p>
                     <p>No category data</p>
@@ -735,7 +734,6 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-        </div>
         </div>
 
         {/* Quick Insights */}
