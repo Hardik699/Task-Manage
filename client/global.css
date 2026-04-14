@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 98%;
+    --foreground: 240 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-50: 262 100% 97%;
+    --primary-100: 262 100% 95%;
+    --primary-200: 262 100% 90%;
+    --primary-300: 262 100% 80%;
+    --primary-400: 262 90% 70%;
+    --primary-500: 262 83% 58%;
+    --primary-600: 262 80% 50%;
+    --primary-700: 262 75% 45%;
+    --primary-800: 262 70% 40%;
+    --primary-900: 262 65% 35%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 10% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 262 83% 58%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-50: 262 100% 97%;
+    --primary-100: 262 100% 95%;
+    --primary-200: 262 100% 90%;
+    --primary-300: 262 100% 80%;
+    --primary-400: 262 90% 70%;
+    --primary-500: 262 83% 58%;
+    --primary-600: 262 80% 50%;
+    --primary-700: 262 75% 45%;
+    --primary-800: 262 70% 40%;
+    --primary-900: 262 65% 35%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 262 83% 58%;
+  }
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Modern Card */
+.modern-card {
+  @apply bg-card rounded-xl border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+/* Stat Card with Gradient */
+.stat-card {
+  @apply modern-card relative overflow-hidden;
+}
+
+.stat-card::before {
+  content: '';
+  @apply absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-10;
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-primary {
+  @apply btn bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 px-6 py-2.5;
+}
+
+.btn-secondary {
+  @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-2.5;
+}
+
+.btn-ghost {
+  @apply btn hover:bg-accent hover:text-accent-foreground px-4 py-2;
+}
+
+.btn-icon {
+  @apply btn h-10 w-10 p-0 hover:bg-accent;
+}
+
+/* Inputs */
+.input {
+  @apply flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all;
+}
+
+/* Date Input - Make calendar icon visible and clickable */
+input[type="date"] {
+  @apply cursor-pointer;
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+  filter: invert(0.5);
+  position: absolute;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
+.textarea {
+  @apply flex min-h-[80px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all;
+}
+
+/* Badges */
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors;
+}
+
+.badge-primary {
+  @apply badge bg-primary/10 text-primary border border-primary/20;
+}
+
+.badge-success {
+  @apply badge bg-success/10 text-success border border-success/20;
+}
+
+.badge-warning {
+  @apply badge bg-warning/10 text-warning border border-warning/20;
+}
+
+.badge-danger {
+  @apply badge bg-destructive/10 text-destructive border border-destructive/20;
+}
+
+.badge-info {
+  @apply badge bg-info/10 text-info border border-info/20;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent;
+}
+
+/* Glass Effect */
+.glass {
+  @apply bg-background/80 backdrop-blur-xl border border-border;
+}
+
+.glass-card {
+  @apply glass rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.input-glass {
+  @apply input bg-background/60 backdrop-blur-sm border-border/50 focus:border-primary/50 focus:bg-background/80;
+}
+
+/* Skeleton Loaders - Dark Theme Compatible */
+.skeleton {
+  @apply animate-pulse rounded-lg bg-muted;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 bg-muted;
+}
+
+.skeleton-title {
+  @apply skeleton h-8 w-48 bg-muted;
+}
+
+.skeleton-card {
+  @apply skeleton h-32 bg-card border border-border;
+}
+
+/* Progress Bar */
+.progress {
+  @apply relative h-2 w-full overflow-hidden rounded-full bg-secondary;
+}
+
+.progress-bar {
+  @apply h-full transition-all duration-500 ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full hover:bg-border/80;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Hover Effects */
+.hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-200;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 8px 30px -5px hsl(var(--primary) / 0.3);
+}
