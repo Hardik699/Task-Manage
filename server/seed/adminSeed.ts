@@ -45,7 +45,9 @@ export async function seedAdmin() {
   }
 }
 
-// Run if called directly
+// Note: Seed is called from server/node-build.ts in production
+// Uncomment below to run seed manually: node server/seed/adminSeed.ts
+/*
 if (import.meta.url === `file://${process.argv[1]}`) {
   seedAdmin()
     .then(() => {
@@ -57,3 +59,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       process.exit(1);
     });
 }
+*/
