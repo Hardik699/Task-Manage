@@ -736,6 +736,45 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Quick Insights */}55, 255, 255, 0.98)',
+                          border: `2px solid ${isDark ? 'rgba(139, 92, 246, 0.5)' : 'rgba(139, 92, 246, 0.3)'}`,
+                          borderRadius: '0.75rem',
+                          boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+                          padding: '12px 16px',
+                        }}
+                        itemStyle={{ color: isDark ? '#fff' : '#000' }}
+                        labelStyle={{ color: isDark ? '#fff' : '#000', fontWeight: 'bold', marginBottom: '8px' }}
+                        formatter={(value) => `₹${value.toLocaleString('en-IN')}`}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="space-y-2">
+                    {expenseStats.map((stat, index) => (
+                      <div key={stat._id} className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                          />
+                          <span className="font-medium">{stat._id}</span>
+                        </div>
+                        <span className="text-foreground/60">₹{stat.total.toLocaleString('en-IN')}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg col-span-2">
+                  <div className="text-center">
+                    <p className="text-5xl mb-3">🥧</p>
+                    <p>No category data</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Quick Insights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Average Monthly Expense */}
