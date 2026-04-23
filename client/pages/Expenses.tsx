@@ -904,7 +904,7 @@ export default function Expenses() {
                             <div className="text-right">
                               <p className="text-xl font-bold">₹{expense.amount.toLocaleString('en-IN')}</p>
                             </div>
-                            <div className="flex gap-2 opacity-0 group-hover/expense:opacity-100 transition-opacity duration-200">
+                            <div className="flex gap-2 transition-opacity duration-200">
                               {/* Upload/Change File Button */}
                               <label className="p-2.5 glass rounded-lg hover:bg-success/20 hover:text-success transition-all duration-200 hover:scale-110 cursor-pointer" title={expense.attachments && expense.attachments.length > 0 ? "Add more files" : "Upload file"}>
                                 <Upload size={18} />
