@@ -326,7 +326,10 @@ export default function Tasks() {
                     type="datetime-local"
                     value={formData.dueDate}
                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    className="input-glass w-full"
+                    className="input-glass w-full cursor-pointer"
+                    style={{
+                      colorScheme: 'dark',
+                    }}
                     required
                   />
                 </div>

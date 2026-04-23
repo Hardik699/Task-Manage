@@ -206,6 +206,35 @@ input[type="date"]::-webkit-clear-button {
   @apply input bg-background/60 backdrop-blur-sm border-border/50 focus:border-primary/50 focus:bg-background/80;
 }
 
+/* Date and DateTime Input Styling */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  position: relative;
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.8);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 /* Skeleton Loaders - Dark Theme Compatible */
 .skeleton {
   @apply animate-pulse rounded-lg bg-muted;
