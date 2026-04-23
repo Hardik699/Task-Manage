@@ -438,6 +438,68 @@ export const expenseAPI = {
       return { data: { message: 'Expense deleted' } };
     }
   },
+  uploadAttachment: async (id: string, data: { fileName: string; fileType: string; fileSize: number; fileData: string }) => {
+    try {
+      return await apiClient.post(`/expenses/${id}/attachment`, data);
+    } catch (error) {
+      if (!isServiceUnavailable(error)) {
+        throw error;
+      }
+
+      // Local storage fallback for attachments
+      const expenses = readLocalExpenses();
+      const expenseIndex = expenses.findIndex((expense) => expense._id === id);
+
+      if (expenseIndex === -1) {
+        throw new Error('Expense not found');
+      }
+
+      const expense: any = expenses[expenseIndex];
+      if (!expense.attachments) {
+        expense.attachments = [];
+      }
+
+      expense.attachments.push({
+        fileName: data.fileName,
+        fileType: data.fileType,
+        fileSize: data.fileSize,
+        fileData: data.fileData,
+        uploadedAt: new Date().toISOString(),
+      });
+
+      expenses[expenseIndex] = expense;
+      writeLocalExpenses(expenses);
+      return { data: { message: 'Attachment uploaded', expense } };
+    }
+  },
+  deleteAttachment: async (id: string, attachmentIndex: number) => {
+    try {
+      return await apiClient.delete(`/expenses/${id}/attachment/${attachmentIndex}`);
+    } catch (error) {
+      if (!isServiceUnavailable(error)) {
+        throw error;
+      }
+
+      // Local storage fallback
+      const expenses = readLocalExpenses();
+      const expenseIndex = expenses.findIndex((expense) => expense._id === id);
+
+      if (expenseIndex === -1) {
+        throw new Error('Expense not found');
+      }
+
+      const expense: any = expenses[expenseIndex];
+      if (!expense.attachments || !expense.attachments[attachmentIndex]) {
+        throw new Error('Attachment not found');
+      }
+
+      expense.attachments.splice(attachmentIndex, 1);
+
+      expenses[expenseIndex] = expense;
+      writeLocalExpenses(expenses);
+      return { data: { message: 'Attachment deleted', expense } };
+    }
+  },
 };
 
 // Policy APIs

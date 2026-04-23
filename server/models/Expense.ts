@@ -13,6 +13,13 @@ interface IExpense {
   recurringInterval?: number; // For monthly: 1, 3, 6, 12 months
   nextDate?: Date;
   reminderDays?: number; // Days before nextDate to send reminder
+  attachments?: Array<{
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+    fileData: string; // Base64 encoded file data
+    uploadedAt: Date;
+  }>;
   createdAt: Date;
 }
 
@@ -71,6 +78,30 @@ const expenseSchema = new mongoose.Schema<IExpense>(
       default: 3,
       min: 0,
     },
+    attachments: [
+      {
+        fileName: {
+          type: String,
+          required: true,
+        },
+        fileType: {
+          type: String,
+          required: true,
+        },
+        fileSize: {
+          type: Number,
+          required: true,
+        },
+        fileData: {
+          type: String,
+          required: true,
+        },
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

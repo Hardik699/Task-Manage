@@ -221,3 +221,99 @@ export const getExpenseStats = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ error: 'Failed to fetch expense stats' });
   }
 };
+
+export const uploadAttachment = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    const { id } = req.params;
+    const { fileName, fileType, fileSize, fileData } = req.body;
+
+    if (!fileName || !fileType || !fileSize || !fileData) {
+      return res.status(400).json({ error: 'All file fields are required' });
+    }
+
+    // Validate file size (max 5MB)
+    if (fileSize > 5 * 1024 * 1024) {
+      return res.status(400).json({ error: 'File size must be less than 5MB' });
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
+    if (!allowedTypes.includes(fileType)) {
+      return res.status(400).json({ error: 'Only images (JPEG, PNG, GIF) and PDF files are allowed' });
+    }
+
+    const expense = await Expense.findOne({ _id: id, userId: req.userId });
+
+    if (!expense) {
+      return res.status(404).json({ error: 'Expense not found' });
+    }
+
+    if (!expense.attachments) {
+      expense.attachments = [];
+    }
+
+    // Limit to 5 attachments per expense
+    if (expense.attachments.length >= 5) {
+      return res.status(400).json({ error: 'Maximum 5 attachments allowed per expense' });
+    }
+
+    expense.attachments.push({
+      fileName,
+      fileType,
+      fileSize,
+      fileData,
+      uploadedAt: new Date(),
+    });
+
+    await expense.save();
+
+    await logActivity(req, {
+      action: 'UPLOAD',
+      entity: 'expense_attachment',
+      entityId: id,
+      details: { fileName, fileType, fileSize },
+    });
+
+    return res.json({ message: 'Attachment uploaded successfully', expense });
+  } catch (error) {
+    console.error('Upload attachment error:', error);
+    return res.status(500).json({ error: 'Failed to upload attachment' });
+  }
+};
+
+export const deleteAttachment = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    const { id, attachmentIndex } = req.params;
+
+    const expense = await Expense.findOne({ _id: id, userId: req.userId });
+
+    if (!expense) {
+      return res.status(404).json({ error: 'Expense not found' });
+    }
+
+    if (!expense.attachments || !expense.attachments[parseInt(attachmentIndex)]) {
+      return res.status(404).json({ error: 'Attachment not found' });
+    }
+
+    const deletedAttachment = expense.attachments[parseInt(attachmentIndex)];
+    expense.attachments.splice(parseInt(attachmentIndex), 1);
+
+    await expense.save();
+
+    await logActivity(req, {
+      action: 'DELETE',
+      entity: 'expense_attachment',
+      entityId: id,
+      details: { fileName: deletedAttachment.fileName },
+    });
+
+    return res.json({ message: 'Attachment deleted successfully', expense });
+  } catch (error) {
+    console.error('Delete attachment error:', error);
+    return res.status(500).json({ error: 'Failed to delete attachment' });
+  }
+};

@@ -3,7 +3,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { expenseAPI } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
 import PasswordConfirmModal from '@/components/PasswordConfirmModal';
-import { Plus, Trash2, TrendingUp, Download, Edit2, X } from 'lucide-react';
+import { Plus, Trash2, TrendingUp, Download, Edit2, X, Upload, FileText, Image as ImageIcon } from 'lucide-react';
 
 interface Expense {
   _id: string;
@@ -18,6 +18,13 @@ interface Expense {
   recurringInterval?: number;
   nextDate?: string;
   reminderDays?: number;
+  attachments?: Array<{
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+    fileData: string;
+    uploadedAt: string;
+  }>;
 }
 
 interface CategoryStats {
@@ -46,6 +53,8 @@ export default function Expenses() {
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grouped' | 'individual'>('grouped');
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [formData, setFormData] = useState({
     amount: '',
     category: '',
@@ -261,6 +270,96 @@ export default function Expenses() {
       reminderDays: 3,
     });
     setShowForm(false);
+  };
+
+  const handleFileUpload = async (expenseId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: 'Error',
+        description: 'File size must be less than 5MB',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: 'Error',
+        description: 'Only images (JPEG, PNG, GIF) and PDF files are allowed',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setUploadingFile(true);
+
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64String = reader.result as string;
+
+        await expenseAPI.uploadAttachment(expenseId, {
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          fileData: base64String,
+        });
+
+        toast({
+          title: 'Success',
+          description: 'File uploaded successfully',
+        });
+
+        fetchExpenses();
+      };
+
+      reader.readAsDataURL(file);
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.error || 'Failed to upload file';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+      console.error('Error uploading file:', error);
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleDeleteAttachment = async (expenseId: string, attachmentIndex: number) => {
+    try {
+      await expenseAPI.deleteAttachment(expenseId, attachmentIndex);
+
+      toast({
+        title: 'Success',
+        description: 'Attachment deleted successfully',
+      });
+
+      fetchExpenses();
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.error || 'Failed to delete attachment';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+      console.error('Error deleting attachment:', error);
+    }
+  };
+
+  const downloadAttachment = (attachment: any) => {
+    const link = document.createElement('a');
+    link.href = attachment.fileData;
+    link.download = attachment.fileName;
+    link.click();
   };
 
   const handleExportCSV = () => {
@@ -540,6 +639,73 @@ export default function Expenses() {
                   )}
                 </div>
 
+                {/* File Upload Section - Only for editing existing expenses */}
+                {editingId && (
+                  <div className="space-y-4 p-4 rounded-lg bg-gradient-to-r from-info/5 to-cyan/5 border border-info/20">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
+                          <Upload size={16} />
+                          Attachments (Images & PDFs)
+                        </h3>
+                        <p className="text-xs text-foreground/60">Upload receipts, bills, or invoices (Max 5MB, up to 5 files)</p>
+                      </div>
+                      <label className="px-4 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
+                        <Upload size={16} />
+                        Upload File
+                        <input
+                          type="file"
+                          accept="image/*,.pdf"
+                          onChange={(e) => handleFileUpload(editingId, e)}
+                          className="hidden"
+                          disabled={uploadingFile}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Show attachments if any */}
+                    {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 && (
+                      <div className="space-y-2">
+                        {expenses.find(e => e._id === editingId)!.attachments!.map((attachment, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-background/60 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              {attachment.fileType.startsWith('image/') ? (
+                                <ImageIcon size={20} className="text-info" />
+                              ) : (
+                                <FileText size={20} className="text-destructive" />
+                              )}
+                              <div>
+                                <p className="text-sm font-medium">{attachment.fileName}</p>
+                                <p className="text-xs text-foreground/60">
+                                  {(attachment.fileSize / 1024).toFixed(2)} KB • {new Date(attachment.uploadedAt).toLocaleDateString('en-IN')}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => downloadAttachment(attachment)}
+                                className="p-2 hover:bg-info/20 rounded-lg transition-all"
+                                title="Download"
+                              >
+                                <Download size={16} className="text-info" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteAttachment(editingId, index)}
+                                className="p-2 hover:bg-destructive/20 rounded-lg transition-all"
+                                title="Delete"
+                              >
+                                <Trash2 size={16} className="text-destructive" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="flex gap-2 justify-end pt-4 border-t border-white/10">
                   <button
                     type="button"
@@ -761,6 +927,11 @@ export default function Expenses() {
                                   ⏭️ Next: {new Date(expense.nextDate).toLocaleDateString('en-IN')}
                                 </span>
                               )}
+                              {expense.attachments && expense.attachments.length > 0 && (
+                                <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/20 text-success font-medium">
+                                  📎 {expense.attachments.length} file{expense.attachments.length > 1 ? 's' : ''}
+                                </span>
+                              )}
                             </div>
                           </div>
 
@@ -817,6 +988,11 @@ export default function Expenses() {
                     {expense.isRecurring && expense.nextDate && (
                       <span className="px-2 py-1 rounded bg-violet/20 text-violet-600 dark:text-violet-400 font-medium">
                         ⏭️ Next: {new Date(expense.nextDate).toLocaleDateString('en-IN')}
+                      </span>
+                    )}
+                    {expense.attachments && expense.attachments.length > 0 && (
+                      <span className="px-2 py-1 rounded bg-success/20 text-success font-medium">
+                        📎 {expense.attachments.length} file{expense.attachments.length > 1 ? 's' : ''}
                       </span>
                     )}
                   </div>
