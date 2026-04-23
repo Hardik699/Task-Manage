@@ -27,13 +27,16 @@ export async function createServer() {
   }
 
   // Security & Middleware
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP for file uploads
+    crossOriginEmbedderPolicy: false, // Allow embedding
+  }));
   app.use(cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   }));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '10mb' })); // Increase limit for base64 files
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(cookieParser());
 
   // Middleware to check database connection
