@@ -54,7 +54,7 @@ export default function Reports() {
     try {
       setLoading(true);
       const [expensesRes, incomesRes, paymentsRes, goalsRes] = await Promise.all([
-        expenseAPI.getAll({}),
+        expenseAPI.getAll({ limit: 1000 }),
         incomeAPI.getAll({}),
         paymentAPI.getAll({}),
         goalAPI.getAll({}),

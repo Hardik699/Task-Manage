@@ -87,7 +87,7 @@ export default function Dashboard() {
       // Fetch all data in parallel
       const results = await Promise.allSettled([
         taskAPI.getAll(),
-        expenseAPI.getAll(),
+        expenseAPI.getAll({ limit: 1000 }), // Fetch up to 1000 expenses
         paymentAPI.getAll(),
         policyAPI.getAll(),
         paymentAPI.getOverdue(),
@@ -146,7 +146,7 @@ export default function Dashboard() {
       });
 
       // Get expense stats for pie chart
-      const statsRes = await expenseAPI.getStats();
+      const statsRes = await expenseAPI.getStats({ limit: 1000 });
       const categorizedStats = Array.isArray(statsRes.data?.stats) ? statsRes.data.stats : [];
       setExpenseStats(categorizedStats.slice(0, 6)); // Top 6 categories
 

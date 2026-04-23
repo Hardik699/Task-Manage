@@ -78,7 +78,7 @@ export default function Expenses() {
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const params: any = {};
+      const params: any = { limit: 1000 }; // Fetch up to 1000 expenses
       if (selectedCategory) params.category = selectedCategory;
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
@@ -171,6 +171,7 @@ export default function Expenses() {
         localStorage.setItem('expense-payment-methods', JSON.stringify(updatedPaymentMethods));
       }
 
+      // Reset form and close modal
       setFormData({ 
         amount: '', 
         category: '', 
@@ -184,7 +185,9 @@ export default function Expenses() {
       });
       setEditingId(null);
       setShowForm(false);
-      fetchExpenses();
+      
+      // Force refresh expenses data
+      await fetchExpenses();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.error || `Failed to ${editingId ? 'update' : 'create'} expense`;
       toast({

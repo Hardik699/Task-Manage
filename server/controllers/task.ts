@@ -43,7 +43,7 @@ export const getTasks = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) return res.status(401).json({ error: 'Unauthorized' });
 
-    const { status, priority, category, page = 1, limit = 10 } = req.query;
+    const { status, priority, category, page = 1, limit = 1000 } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
 
     const filter: any = { userId: req.userId };
