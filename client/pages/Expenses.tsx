@@ -317,7 +317,8 @@ export default function Expenses() {
           description: 'File uploaded successfully',
         });
 
-        fetchExpenses();
+        // Refresh expenses to show the new attachment
+        await fetchExpenses();
       };
 
       reader.readAsDataURL(file);
@@ -331,6 +332,8 @@ export default function Expenses() {
       console.error('Error uploading file:', error);
     } finally {
       setUploadingFile(false);
+      // Clear the input so same file can be uploaded again
+      event.target.value = '';
     }
   };
 
@@ -343,7 +346,8 @@ export default function Expenses() {
         description: 'Attachment deleted successfully',
       });
 
-      fetchExpenses();
+      // Refresh expenses to update the list
+      await fetchExpenses();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.error || 'Failed to delete attachment';
       toast({
@@ -650,32 +654,52 @@ export default function Expenses() {
                         </h3>
                         <p className="text-xs text-foreground/60">Upload receipts, bills, or invoices (Max 5MB, up to 5 files)</p>
                       </div>
-                      <label className="px-4 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
-                        <Upload size={16} />
-                        Upload File
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          onChange={(e) => handleFileUpload(editingId, e)}
-                          className="hidden"
-                          disabled={uploadingFile}
-                        />
-                      </label>
+                      <div className="flex gap-2">
+                        {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const expense = expenses.find(e => e._id === editingId);
+                              if (expense?.attachments && expense.attachments.length > 0) {
+                                expense.attachments.forEach(att => downloadAttachment(att));
+                              }
+                            }}
+                            className="px-4 py-2 bg-success/20 hover:bg-success/30 text-success rounded-lg transition-all flex items-center gap-2 text-sm font-medium"
+                            title="Download all attachments"
+                          >
+                            <Download size={16} />
+                            Download All
+                          </button>
+                        )}
+                        <label className="px-4 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
+                          <Upload size={16} />
+                          {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 ? 'Add More' : 'Upload File'}
+                          <input
+                            type="file"
+                            accept="image/*,.pdf"
+                            onChange={(e) => handleFileUpload(editingId, e)}
+                            className="hidden"
+                            disabled={uploadingFile}
+                          />
+                        </label>
+                      </div>
                     </div>
 
                     {/* Show attachments if any */}
                     {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 && (
                       <div className="space-y-2">
                         {expenses.find(e => e._id === editingId)!.attachments!.map((attachment, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-background/60 rounded-lg">
-                            <div className="flex items-center gap-3">
-                              {attachment.fileType.startsWith('image/') ? (
-                                <ImageIcon size={20} className="text-info" />
-                              ) : (
-                                <FileText size={20} className="text-destructive" />
-                              )}
-                              <div>
-                                <p className="text-sm font-medium">{attachment.fileName}</p>
+                          <div key={index} className="flex items-center justify-between p-3 bg-background/60 rounded-lg border border-white/10 hover:border-info/30 transition-all group">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-info/20 to-cyan/20 flex items-center justify-center">
+                                {attachment.fileType.startsWith('image/') ? (
+                                  <ImageIcon size={20} className="text-info" />
+                                ) : (
+                                  <FileText size={20} className="text-destructive" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{attachment.fileName}</p>
                                 <p className="text-xs text-foreground/60">
                                   {(attachment.fileSize / 1024).toFixed(2)} KB • {new Date(attachment.uploadedAt).toLocaleDateString('en-IN')}
                                 </p>
@@ -685,22 +709,46 @@ export default function Expenses() {
                               <button
                                 type="button"
                                 onClick={() => downloadAttachment(attachment)}
-                                className="p-2 hover:bg-info/20 rounded-lg transition-all"
+                                className="px-3 py-2 bg-success/20 hover:bg-success/30 text-success rounded-lg transition-all flex items-center gap-2 text-sm font-medium"
                                 title="Download"
                               >
-                                <Download size={16} className="text-info" />
+                                <Download size={16} />
+                                Download
                               </button>
+                              <label className="px-3 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
+                                <Edit2 size={16} />
+                                Change
+                                <input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  onChange={async (e) => {
+                                    // First delete the old file
+                                    await handleDeleteAttachment(editingId, index);
+                                    // Then upload the new file
+                                    await handleFileUpload(editingId, e);
+                                  }}
+                                  className="hidden"
+                                  disabled={uploadingFile}
+                                />
+                              </label>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteAttachment(editingId, index)}
-                                className="p-2 hover:bg-destructive/20 rounded-lg transition-all"
+                                className="p-2 hover:bg-destructive/20 text-destructive rounded-lg transition-all"
                                 title="Delete"
                               >
-                                <Trash2 size={16} className="text-destructive" />
+                                <Trash2 size={16} />
                               </button>
                             </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+
+                    {uploadingFile && (
+                      <div className="flex items-center justify-center gap-2 p-3 bg-info/10 rounded-lg">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-info border-t-transparent"></div>
+                        <p className="text-sm text-info font-medium">Uploading file...</p>
                       </div>
                     )}
                   </div>
