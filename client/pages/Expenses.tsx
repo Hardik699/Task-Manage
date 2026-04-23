@@ -643,117 +643,6 @@ export default function Expenses() {
                   )}
                 </div>
 
-                {/* File Upload Section - Only for editing existing expenses */}
-                {editingId && (
-                  <div className="space-y-4 p-4 rounded-lg bg-gradient-to-r from-info/5 to-cyan/5 border border-info/20">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
-                          <Upload size={16} />
-                          Attachments (Images & PDFs)
-                        </h3>
-                        <p className="text-xs text-foreground/60">Upload receipts, bills, or invoices (Max 5MB, up to 5 files)</p>
-                      </div>
-                      <div className="flex gap-2">
-                        {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const expense = expenses.find(e => e._id === editingId);
-                              if (expense?.attachments && expense.attachments.length > 0) {
-                                expense.attachments.forEach(att => downloadAttachment(att));
-                              }
-                            }}
-                            className="px-4 py-2 bg-success/20 hover:bg-success/30 text-success rounded-lg transition-all flex items-center gap-2 text-sm font-medium"
-                            title="Download all attachments"
-                          >
-                            <Download size={16} />
-                            Download All
-                          </button>
-                        )}
-                        <label className="px-4 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
-                          <Upload size={16} />
-                          {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 ? 'Add More' : 'Upload File'}
-                          <input
-                            type="file"
-                            accept="image/*,.pdf"
-                            onChange={(e) => handleFileUpload(editingId, e)}
-                            className="hidden"
-                            disabled={uploadingFile}
-                          />
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Show attachments if any */}
-                    {expenses.find(e => e._id === editingId)?.attachments && expenses.find(e => e._id === editingId)!.attachments!.length > 0 && (
-                      <div className="space-y-2">
-                        {expenses.find(e => e._id === editingId)!.attachments!.map((attachment, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-background/60 rounded-lg border border-white/10 hover:border-info/30 transition-all group">
-                            <div className="flex items-center gap-3 flex-1">
-                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-info/20 to-cyan/20 flex items-center justify-center">
-                                {attachment.fileType.startsWith('image/') ? (
-                                  <ImageIcon size={20} className="text-info" />
-                                ) : (
-                                  <FileText size={20} className="text-destructive" />
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate">{attachment.fileName}</p>
-                                <p className="text-xs text-foreground/60">
-                                  {(attachment.fileSize / 1024).toFixed(2)} KB • {new Date(attachment.uploadedAt).toLocaleDateString('en-IN')}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                type="button"
-                                onClick={() => downloadAttachment(attachment)}
-                                className="px-3 py-2 bg-success/20 hover:bg-success/30 text-success rounded-lg transition-all flex items-center gap-2 text-sm font-medium"
-                                title="Download"
-                              >
-                                <Download size={16} />
-                                Download
-                              </button>
-                              <label className="px-3 py-2 bg-info/20 hover:bg-info/30 text-info rounded-lg cursor-pointer transition-all flex items-center gap-2 text-sm font-medium">
-                                <Edit2 size={16} />
-                                Change
-                                <input
-                                  type="file"
-                                  accept="image/*,.pdf"
-                                  onChange={async (e) => {
-                                    // First delete the old file
-                                    await handleDeleteAttachment(editingId, index);
-                                    // Then upload the new file
-                                    await handleFileUpload(editingId, e);
-                                  }}
-                                  className="hidden"
-                                  disabled={uploadingFile}
-                                />
-                              </label>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteAttachment(editingId, index)}
-                                className="p-2 hover:bg-destructive/20 text-destructive rounded-lg transition-all"
-                                title="Delete"
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {uploadingFile && (
-                      <div className="flex items-center justify-center gap-2 p-3 bg-info/10 rounded-lg">
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-info border-t-transparent"></div>
-                        <p className="text-sm text-info font-medium">Uploading file...</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
                 <div className="flex gap-2 justify-end pt-4 border-t border-white/10">
                   <button
                     type="button"
@@ -1016,6 +905,35 @@ export default function Expenses() {
                               <p className="text-xl font-bold">₹{expense.amount.toLocaleString('en-IN')}</p>
                             </div>
                             <div className="flex gap-2 opacity-0 group-hover/expense:opacity-100 transition-opacity duration-200">
+                              {/* Upload/Change File Button */}
+                              <label className="p-2.5 glass rounded-lg hover:bg-success/20 hover:text-success transition-all duration-200 hover:scale-110 cursor-pointer" title={expense.attachments && expense.attachments.length > 0 ? "Add more files" : "Upload file"}>
+                                <Upload size={18} />
+                                <input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    handleFileUpload(expense._id, e);
+                                  }}
+                                  className="hidden"
+                                  disabled={uploadingFile}
+                                />
+                              </label>
+                              
+                              {/* Download All Button - Only show if attachments exist */}
+                              {expense.attachments && expense.attachments.length > 0 && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    expense.attachments?.forEach(att => downloadAttachment(att));
+                                  }}
+                                  className="p-2.5 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all duration-200 hover:scale-110"
+                                  title="Download all files"
+                                >
+                                  <Download size={18} />
+                                </button>
+                              )}
+                              
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -1110,6 +1028,30 @@ export default function Expenses() {
                     <div className="text-right">
                       <p className="text-2xl font-bold">₹{expense.amount.toLocaleString('en-IN')}</p>
                     </div>
+                    
+                    {/* Upload/Add More Button */}
+                    <label className="p-2 glass rounded-lg hover:bg-success/20 hover:text-success transition-all cursor-pointer" title={expense.attachments && expense.attachments.length > 0 ? "Add more files" : "Upload file"}>
+                      <Upload size={20} />
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={(e) => handleFileUpload(expense._id, e)}
+                        className="hidden"
+                        disabled={uploadingFile}
+                      />
+                    </label>
+                    
+                    {/* Download All Button */}
+                    {expense.attachments && expense.attachments.length > 0 && (
+                      <button
+                        onClick={() => expense.attachments?.forEach(att => downloadAttachment(att))}
+                        className="p-2 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all"
+                        title="Download all files"
+                      >
+                        <Download size={20} />
+                      </button>
+                    )}
+                    
                     <button
                       onClick={() => handleEditExpense(expense)}
                       className="p-2 glass rounded-lg hover:bg-white/20 dark:hover:bg-white/10 text-info"
