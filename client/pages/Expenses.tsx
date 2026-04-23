@@ -87,7 +87,10 @@ export default function Expenses() {
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const params: any = { limit: 1000 }; // Fetch up to 1000 expenses
+      const params: any = { 
+        limit: 1000,
+        _t: Date.now() // Cache busting parameter
+      };
       if (selectedCategory) params.category = selectedCategory;
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
@@ -297,12 +300,12 @@ export default function Expenses() {
       return;
     }
 
-    try {
-      setUploadingFile(true);
+    setUploadingFile(true);
 
-      // Convert file to base64
-      const reader = new FileReader();
-      reader.onloadend = async () => {
+    // Convert file to base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
         const base64String = reader.result as string;
 
         await expenseAPI.uploadAttachment(expenseId, {
@@ -318,23 +321,35 @@ export default function Expenses() {
         });
 
         // Refresh expenses to show the new attachment
+        console.log('Fetching expenses after upload...');
         await fetchExpenses();
-      };
+        console.log('Expenses fetched successfully');
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.error || 'Failed to upload file';
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+        console.error('Error uploading file:', error);
+      } finally {
+        setUploadingFile(false);
+        // Clear the input so same file can be uploaded again
+        event.target.value = '';
+      }
+    };
 
-      reader.readAsDataURL(file);
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || 'Failed to upload file';
+    reader.onerror = () => {
       toast({
         title: 'Error',
-        description: errorMessage,
+        description: 'Failed to read file',
         variant: 'destructive',
       });
-      console.error('Error uploading file:', error);
-    } finally {
       setUploadingFile(false);
-      // Clear the input so same file can be uploaded again
       event.target.value = '';
-    }
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleDeleteAttachment = async (expenseId: string, attachmentIndex: number) => {
@@ -920,19 +935,30 @@ export default function Expenses() {
                                 />
                               </label>
                               
-                              {/* Download All Button - Only show if attachments exist */}
-                              {expense.attachments && expense.attachments.length > 0 && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    expense.attachments?.forEach(att => downloadAttachment(att));
-                                  }}
-                                  className="p-2.5 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all duration-200 hover:scale-110"
-                                  title="Download all files"
-                                >
-                                  <Download size={18} />
-                                </button>
-                              )}
+                              {/* Download All Button - Show always for debugging */}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (expense.attachments && expense.attachments.length > 0) {
+                                    expense.attachments.forEach(att => downloadAttachment(att));
+                                  } else {
+                                    toast({
+                                      title: 'No attachments',
+                                      description: 'This expense has no attachments yet',
+                                      variant: 'destructive',
+                                    });
+                                  }
+                                }}
+                                className="p-2.5 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all duration-200 hover:scale-110"
+                                title={expense.attachments && expense.attachments.length > 0 ? `Download ${expense.attachments.length} file(s)` : "No attachments"}
+                              >
+                                <Download size={18} />
+                                {expense.attachments && expense.attachments.length > 0 && (
+                                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-success text-white text-xs rounded-full flex items-center justify-center">
+                                    {expense.attachments.length}
+                                  </span>
+                                )}
+                              </button>
                               
                               <button
                                 onClick={(e) => {
@@ -1041,16 +1067,29 @@ export default function Expenses() {
                       />
                     </label>
                     
-                    {/* Download All Button */}
-                    {expense.attachments && expense.attachments.length > 0 && (
-                      <button
-                        onClick={() => expense.attachments?.forEach(att => downloadAttachment(att))}
-                        className="p-2 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all"
-                        title="Download all files"
-                      >
-                        <Download size={20} />
-                      </button>
-                    )}
+                    {/* Download All Button - Always visible for debugging */}
+                    <button
+                      onClick={() => {
+                        if (expense.attachments && expense.attachments.length > 0) {
+                          expense.attachments.forEach(att => downloadAttachment(att));
+                        } else {
+                          toast({
+                            title: 'No attachments',
+                            description: 'This expense has no attachments yet',
+                            variant: 'destructive',
+                          });
+                        }
+                      }}
+                      className="p-2 glass rounded-lg hover:bg-primary/20 hover:text-primary transition-all relative"
+                      title={expense.attachments && expense.attachments.length > 0 ? `Download ${expense.attachments.length} file(s)` : "No attachments"}
+                    >
+                      <Download size={20} />
+                      {expense.attachments && expense.attachments.length > 0 && (
+                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-success text-white text-xs rounded-full flex items-center justify-center">
+                          {expense.attachments.length}
+                        </span>
+                      )}
+                    </button>
                     
                     <button
                       onClick={() => handleEditExpense(expense)}

@@ -271,9 +271,9 @@ export const uploadAttachment = async (req: AuthRequest, res: Response) => {
 
     await logActivity(req, {
       action: 'UPLOAD',
-      entity: 'expense_attachment',
+      entity: 'expense',
       entityId: id,
-      details: { fileName, fileType, fileSize },
+      details: { fileName, fileType, fileSize, action: 'attachment_upload' },
     });
 
     return res.json({ message: 'Attachment uploaded successfully', expense });
@@ -306,9 +306,9 @@ export const deleteAttachment = async (req: AuthRequest, res: Response) => {
 
     await logActivity(req, {
       action: 'DELETE',
-      entity: 'expense_attachment',
+      entity: 'expense',
       entityId: id,
-      details: { fileName: deletedAttachment.fileName },
+      details: { fileName: deletedAttachment.fileName, action: 'attachment_delete' },
     });
 
     return res.json({ message: 'Attachment deleted successfully', expense });
