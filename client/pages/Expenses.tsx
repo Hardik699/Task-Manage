@@ -933,6 +933,34 @@ export default function Expenses() {
                                 </span>
                               )}
                             </div>
+
+                            {/* Show Attachments if any */}
+                            {expense.attachments && expense.attachments.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-white/10">
+                                <p className="text-xs font-semibold text-foreground/60 mb-2">📎 Attachments:</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {expense.attachments.map((attachment, attIndex) => (
+                                    <button
+                                      key={attIndex}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        downloadAttachment(attachment);
+                                      }}
+                                      className="flex items-center gap-2 px-3 py-1.5 bg-success/10 hover:bg-success/20 rounded-lg text-xs font-medium text-success transition-all group/att"
+                                      title={`Download ${attachment.fileName}`}
+                                    >
+                                      {attachment.fileType.startsWith('image/') ? (
+                                        <ImageIcon size={14} />
+                                      ) : (
+                                        <FileText size={14} />
+                                      )}
+                                      <span className="max-w-[150px] truncate">{attachment.fileName}</span>
+                                      <Download size={12} className="opacity-0 group-hover/att:opacity-100 transition-opacity" />
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-4">
@@ -941,14 +969,20 @@ export default function Expenses() {
                             </div>
                             <div className="flex gap-2 opacity-0 group-hover/expense:opacity-100 transition-opacity duration-200">
                               <button
-                                onClick={() => handleEditExpense(expense)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditExpense(expense);
+                                }}
                                 className="p-2.5 glass rounded-lg hover:bg-info/20 hover:text-info transition-all duration-200 hover:scale-110"
                                 title="Edit expense"
                               >
                                 <Edit2 size={18} />
                               </button>
                               <button
-                                onClick={() => openDeleteConfirm(expense._id, expense.category)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openDeleteConfirm(expense._id, expense.category);
+                                }}
                                 className="p-2.5 glass rounded-lg hover:bg-destructive/20 hover:text-destructive transition-all duration-200 hover:scale-110"
                                 title="Delete expense"
                               >
@@ -966,55 +1000,82 @@ export default function Expenses() {
           ) : (
             // Individual View
             expenses.map((expense) => (
-              <div key={expense._id} className="glass-card flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold">{expense.category}</h3>
-                    <span className="text-xs font-medium px-2 py-1 rounded bg-primary/20 text-primary">
-                      {expense.source === 'telegram' ? '🤖 Telegram' : '🌐 Website'}
-                    </span>
-                    {expense.isRecurring && (
-                      <span className="text-xs font-medium px-2 py-1 rounded bg-violet/20 text-violet-600 dark:text-violet-400 flex items-center gap-1">
-                        <span>🔄</span>
-                        Every {expense.recurringInterval || 1} {expense.frequency?.charAt(0).toUpperCase() + expense.frequency?.slice(1)}
-                        {(expense.recurringInterval || 1) > 1 ? 's' : ''}
+              <div key={expense._id} className="glass-card">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-lg font-bold">{expense.category}</h3>
+                      <span className="text-xs font-medium px-2 py-1 rounded bg-primary/20 text-primary">
+                        {expense.source === 'telegram' ? '🤖 Telegram' : '🌐 Website'}
                       </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-foreground/70 mb-2">{expense.note || 'No notes'}</p>
-                  <div className="flex gap-4 text-xs text-foreground/60">
-                    <span>{new Date(expense.date).toLocaleDateString('en-IN')}</span>
-                    {expense.paymentMethod && <span>💳 {expense.paymentMethod}</span>}
-                    {expense.isRecurring && expense.nextDate && (
-                      <span className="px-2 py-1 rounded bg-violet/20 text-violet-600 dark:text-violet-400 font-medium">
-                        ⏭️ Next: {new Date(expense.nextDate).toLocaleDateString('en-IN')}
-                      </span>
-                    )}
-                    {expense.attachments && expense.attachments.length > 0 && (
-                      <span className="px-2 py-1 rounded bg-success/20 text-success font-medium">
-                        📎 {expense.attachments.length} file{expense.attachments.length > 1 ? 's' : ''}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                      {expense.isRecurring && (
+                        <span className="text-xs font-medium px-2 py-1 rounded bg-violet/20 text-violet-600 dark:text-violet-400 flex items-center gap-1">
+                          <span>🔄</span>
+                          Every {expense.recurringInterval || 1} {expense.frequency?.charAt(0).toUpperCase() + expense.frequency?.slice(1)}
+                          {(expense.recurringInterval || 1) > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-foreground/70 mb-2">{expense.note || 'No notes'}</p>
+                    <div className="flex gap-4 text-xs text-foreground/60 mb-2">
+                      <span>{new Date(expense.date).toLocaleDateString('en-IN')}</span>
+                      {expense.paymentMethod && <span>💳 {expense.paymentMethod}</span>}
+                      {expense.isRecurring && expense.nextDate && (
+                        <span className="px-2 py-1 rounded bg-violet/20 text-violet-600 dark:text-violet-400 font-medium">
+                          ⏭️ Next: {new Date(expense.nextDate).toLocaleDateString('en-IN')}
+                        </span>
+                      )}
+                      {expense.attachments && expense.attachments.length > 0 && (
+                        <span className="px-2 py-1 rounded bg-success/20 text-success font-medium">
+                          📎 {expense.attachments.length} file{expense.attachments.length > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-2xl font-bold">₹{expense.amount.toLocaleString('en-IN')}</p>
+                    {/* Show Attachments if any */}
+                    {expense.attachments && expense.attachments.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-white/10">
+                        <p className="text-xs font-semibold text-foreground/60 mb-2">📎 Attachments:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {expense.attachments.map((attachment, attIndex) => (
+                            <button
+                              key={attIndex}
+                              onClick={() => downloadAttachment(attachment)}
+                              className="flex items-center gap-2 px-3 py-1.5 bg-success/10 hover:bg-success/20 rounded-lg text-xs font-medium text-success transition-all group/att"
+                              title={`Download ${attachment.fileName}`}
+                            >
+                              {attachment.fileType.startsWith('image/') ? (
+                                <ImageIcon size={14} />
+                              ) : (
+                                <FileText size={14} />
+                              )}
+                              <span className="max-w-[200px] truncate">{attachment.fileName}</span>
+                              <Download size={12} className="opacity-0 group-hover/att:opacity-100 transition-opacity" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <button
-                    onClick={() => handleEditExpense(expense)}
-                    className="p-2 glass rounded-lg hover:bg-white/20 dark:hover:bg-white/10 text-info"
-                    title="Edit expense"
-                  >
-                    <Edit2 size={20} />
-                  </button>
-                  <button
-                    onClick={() => openDeleteConfirm(expense._id, expense.category)}
-                    className="p-2 glass rounded-lg hover:bg-white/20 dark:hover:bg-white/10 text-destructive"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">₹{expense.amount.toLocaleString('en-IN')}</p>
+                    </div>
+                    <button
+                      onClick={() => handleEditExpense(expense)}
+                      className="p-2 glass rounded-lg hover:bg-white/20 dark:hover:bg-white/10 text-info"
+                      title="Edit expense"
+                    >
+                      <Edit2 size={20} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteConfirm(expense._id, expense.category)}
+                      className="p-2 glass rounded-lg hover:bg-white/20 dark:hover:bg-white/10 text-destructive"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
