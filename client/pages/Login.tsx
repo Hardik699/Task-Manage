@@ -96,7 +96,7 @@ export default function Login() {
         </div>
 
         {/* Right side - Enhanced Login Form with Mobile Optimization */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-auto">
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
           <div className="w-full max-w-sm sm:max-w-md animate-slide-up">
             {/* Mobile Header - Always visible on mobile */}
             <div className="mb-6 sm:mb-8 text-center">

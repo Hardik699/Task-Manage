@@ -922,7 +922,7 @@ body {
 }
 
 .login-form-container {
-  @apply flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-auto;
+  @apply flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-0;
 }
 
 .login-form-wrapper {
