@@ -329,111 +329,112 @@ export default function Dashboard() {
 
   return (
     <MainLayout>
-      <div className="space-y-6 animate-fade-in">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, {userName}! 👋</h1>
-            <p className="text-muted-foreground">Here's what's happening with your finances today</p>
+      <div className="space-responsive-y">
+        {/* Header - Enhanced Responsive */}
+        <div className="stack-mobile">
+          <div className="flex-1">
+            <h1 className="text-responsive-3xl font-bold mb-1 sm:mb-2 text-gradient-primary">Welcome back, {userName}! 👋</h1>
+            <p className="text-responsive-sm text-muted-foreground">Here's what's happening with your finances today</p>
           </div>
           <button
             onClick={() => setShowNotificationDialog(true)}
-            className="btn-icon relative"
+            className="btn-icon relative hover-scale self-start sm:self-center"
             title="Notifications"
+            aria-label="View notifications"
           >
-            <Bell size={20} className={overduePayments.length > 0 ? 'text-warning' : ''} />
+            <Bell size={20} className={`icon-responsive-md ${overduePayments.length > 0 ? 'text-warning' : ''}`} />
             {overduePayments.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-white text-xs rounded-full flex items-center justify-center font-semibold">
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-white text-xs rounded-full flex items-center justify-center font-semibold animate-pulse shadow-lg shadow-destructive/50">
                 {overduePayments.length}
               </span>
             )}
           </button>
         </div>
 
-        {/* Summary Cards - Premium Design */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Summary Cards - Enhanced Responsive Premium Design */}
+        <div className="responsive-grid-1-2-4 gap-responsive">
           {/* Total Expenses */}
-          <div className="stat-card hover-lift hover-glow group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-xl group-hover:shadow-primary/40 transition-all">
-                  <TrendingUp className="text-white" size={22} />
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-xl group-hover:shadow-primary/40 transition-all hover-scale">
+                  <TrendingUp className="text-white" size={20} />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
+                <span className="badge-responsive badge-success animate-pulse-glow">
                   +12.5%
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Total Expenses</p>
-              <h3 className="text-2xl font-bold">₹{stats.totalExpenses.toLocaleString('en-IN')}</h3>
-              <p className="text-xs text-muted-foreground mt-2">vs last month</p>
+              <p className="stat-label-responsive mb-1">Total Expenses</p>
+              <h3 className="stat-value-responsive text-gradient-primary">₹{stats.totalExpenses.toLocaleString('en-IN')}</h3>
+              <p className="text-xs text-muted-foreground mt-1 sm:mt-2">vs last month</p>
             </div>
           </div>
 
           {/* Pending Payments */}
-          <div className="stat-card hover-lift hover-glow group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-warning to-orange-500 flex items-center justify-center shadow-lg shadow-warning/30 group-hover:shadow-xl group-hover:shadow-warning/40 transition-all">
-                  <Clock className="text-white" size={22} />
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-warning to-orange-500 flex items-center justify-center shadow-lg shadow-warning/30 group-hover:shadow-xl group-hover:shadow-warning/40 transition-all hover-scale">
+                  <Clock className="text-white" size={20} />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-warning/10 text-warning border border-warning/20">
+                <span className="badge-responsive badge-warning animate-pulse">
                   Due
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Pending Payments</p>
-              <h3 className="text-2xl font-bold">{stats.pendingPayments}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Action required</p>
+              <p className="stat-label-responsive mb-1">Pending Payments</p>
+              <h3 className="stat-value-responsive text-gradient-warning">{stats.pendingPayments}</h3>
+              <p className="text-xs text-muted-foreground mt-1 sm:mt-2">Action required</p>
             </div>
           </div>
 
           {/* Pending Tasks */}
-          <div className="stat-card hover-lift hover-glow group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-info to-cyan-500 flex items-center justify-center shadow-lg shadow-info/30 group-hover:shadow-xl group-hover:shadow-info/40 transition-all">
-                  <CheckCircle className="text-white" size={22} />
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-info to-cyan-500 flex items-center justify-center shadow-lg shadow-info/30 group-hover:shadow-xl group-hover:shadow-info/40 transition-all hover-scale">
+                  <CheckCircle className="text-white" size={20} />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-destructive/10 text-destructive border border-destructive/20">
+                <span className="badge-responsive badge-danger animate-bounce-subtle">
                   {stats.overdueTasks}
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Pending Tasks</p>
-              <h3 className="text-2xl font-bold">{stats.pendingTasks}</h3>
-              <p className="text-xs text-muted-foreground mt-2">{stats.overdueTasks} overdue</p>
+              <p className="stat-label-responsive mb-1">Pending Tasks</p>
+              <h3 className="stat-value-responsive">{stats.pendingTasks}</h3>
+              <p className="text-xs text-muted-foreground mt-1 sm:mt-2">{stats.overdueTasks} overdue</p>
             </div>
           </div>
 
           {/* Upcoming Renewals */}
-          <div className="stat-card hover-lift hover-glow group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-success to-emerald-500 flex items-center justify-center shadow-lg shadow-success/30 group-hover:shadow-xl group-hover:shadow-success/40 transition-all">
-                  <AlertCircle className="text-white" size={22} />
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-success to-emerald-500 flex items-center justify-center shadow-lg shadow-success/30 group-hover:shadow-xl group-hover:shadow-success/40 transition-all hover-scale">
+                  <AlertCircle className="text-white" size={20} />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
+                <span className="badge-responsive badge-success">
                   Active
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Upcoming Renewals</p>
-              <h3 className="text-2xl font-bold">{stats.upcomingRenewals}</h3>
-              <p className="text-xs text-muted-foreground mt-2">Next 30 days</p>
+              <p className="stat-label-responsive mb-1">Upcoming Renewals</p>
+              <h3 className="stat-value-responsive text-gradient-success">{stats.upcomingRenewals}</h3>
+              <p className="text-xs text-muted-foreground mt-1 sm:mt-2">Next 30 days</p>
             </div>
           </div>
         </div>
 
-        {/* Charts Section - Premium Design */}
-        <div className="grid grid-cols-1 gap-4">
+        {/* Charts Section - Responsive Premium Design */}
+        <div className="space-responsive-y">
           {/* Income vs Expense Chart - 12 Months */}
-          <div className="modern-card">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold mb-1">💰 Income vs Expense - {selectedYear}</h2>
-                <p className="text-sm text-muted-foreground">Compare your monthly income and expenses</p>
+          <div className="premium-card hover-float">
+            <div className="mb-4 sm:mb-6 stack-mobile">
+              <div className="flex-1">
+                <h2 className="text-responsive-lg font-semibold mb-1 text-gradient-primary">💰 Income vs Expense - {selectedYear}</h2>
+                <p className="text-responsive-sm text-muted-foreground">Compare your monthly income and expenses</p>
               </div>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="input text-sm w-auto"
+                className="input-responsive w-full sm:w-auto bg-background/60 backdrop-blur-sm border-border/50 focus:border-primary/50 hover:border-primary/30 transition-all"
               >
                 {availableYears.map((year) => (
                   <option key={year} value={year}>{year}</option>
@@ -441,7 +442,8 @@ export default function Dashboard() {
               </select>
             </div>
             {monthlyIncomeVsExpense.length > 0 ? (
-              <ResponsiveContainer width="100%" height={340}>
+              <div className="responsive-chart sm:h-80 lg:h-96">
+                <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={monthlyIncomeVsExpense}
                   margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
@@ -510,25 +512,25 @@ export default function Dashboard() {
                     animationBegin={200}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             ) : (
-              <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg">
-                <div className="text-center">
-                  <p className="text-5xl mb-3">📊</p>
-                  <p>No income/expense data available</p>
-                </div>
+              <div className="empty-state-mobile h-64 sm:h-80">
+                <p className="empty-state-icon">📊</p>
+                <p className="empty-state-text">No income/expense data available</p>
               </div>
             )}
           </div>
 
           {/* Total Savings Chart - 12 Months */}
-          <div className="modern-card">
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold mb-1">💎 Total Savings - {selectedYear}</h2>
-              <p className="text-sm text-muted-foreground">Monthly savings (Income - Expense)</p>
+          <div className="premium-card hover-float">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-responsive-lg font-semibold mb-1 text-gradient-success">💎 Total Savings - {selectedYear}</h2>
+              <p className="text-responsive-sm text-muted-foreground">Monthly savings (Income - Expense)</p>
             </div>
             {monthlySavings.length > 0 ? (
-              <ResponsiveContainer width="100%" height={340}>
+              <div className="responsive-chart sm:h-80 lg:h-96">
+                <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={monthlySavings}
                   margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
@@ -591,26 +593,26 @@ export default function Dashboard() {
                     ))}
                   </Bar>
                 </BarChart>
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             ) : (
-              <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg">
-                <div className="text-center">
-                  <p className="text-5xl mb-3">💎</p>
-                  <p>No savings data available</p>
-                </div>
+              <div className="empty-state-mobile h-64 sm:h-80">
+                <p className="empty-state-icon">💎</p>
+                <p className="empty-state-text">No savings data available</p>
               </div>
             )}
           </div>
 
           {/* Monthly Expenses Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="modern-card">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-1">Monthly Expenses</h2>
-                <p className="text-sm text-muted-foreground">Track your spending patterns</p>
+          <div className="responsive-grid-1-2 gap-responsive">
+            <div className="premium-card hover-float">
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-responsive-lg font-semibold mb-1 text-gradient-primary">Monthly Expenses</h2>
+                <p className="text-responsive-sm text-muted-foreground">Track your spending patterns</p>
               </div>
               {monthlyExpenses.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <div className="responsive-chart">
+                  <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={monthlyExpenses}
                     margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
@@ -659,22 +661,21 @@ export default function Dashboard() {
                     />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : (
-                <div className="h-80 flex items-center justify-center text-foreground/40 bg-white/5 rounded-lg">
-                  <div className="text-center">
-                    <p className="text-5xl mb-3">📊</p>
-                    <p>No expense data available</p>
-                  </div>
-                </div>
-              )}
+              </div>
+            ) : (
+              <div className="empty-state-mobile h-64">
+                <p className="empty-state-icon">📊</p>
+                <p className="empty-state-text">No expense data available</p>
+              </div>
+            )}
             </div>
 
             {/* Category Breakdown Pie Chart */}
-            <div className="glass-card p-6 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet/5 via-transparent to-transparent pointer-events-none"></div>
+            <div className="premium-card hover-float card-tilt relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-transparent pointer-events-none"></div>
             <div className="relative z-10">
               <div className="mb-6">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-violet-500 to-primary-500 bg-clip-text text-transparent">Category Breakdown</h2>
+                <h2 className="text-xl font-bold text-gradient-primary">Category Breakdown</h2>
                 <p className="text-sm text-foreground/50 mt-1">🥧 Top spending categories</p>
               </div>
               {expenseStats.length > 0 ? (
@@ -739,16 +740,16 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Insights */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="responsive-grid-1-2-3 gap-responsive">
           {/* Average Monthly Expense */}
-          <div className="glass-card p-6 hover:border-primary/30 transition-all duration-300 group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="text-2xl">📈</span>
               </div>
               <div>
                 <p className="text-sm text-foreground/60 font-medium">Avg Monthly Expense</p>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-gradient-primary">
                   ₹{Math.round(monthlyExpenses.reduce((sum, m) => sum + m.amount, 0) / 12).toLocaleString('en-IN')}
                 </p>
               </div>
@@ -757,14 +758,14 @@ export default function Dashboard() {
           </div>
 
           {/* Highest Expense Month */}
-          <div className="glass-card p-6 hover:border-primary/30 transition-all duration-300 group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="text-2xl">🔥</span>
               </div>
               <div>
                 <p className="text-sm text-foreground/60 font-medium">Highest Expense</p>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-gradient-warning">
                   {monthlyExpenses.length > 0 
                     ? monthlyExpenses.reduce((max, m) => m.amount > max.amount ? m : max, monthlyExpenses[0]).month
                     : 'N/A'}
@@ -779,14 +780,14 @@ export default function Dashboard() {
           </div>
 
           {/* Savings Potential */}
-          <div className="glass-card p-6 hover:border-primary/30 transition-all duration-300 group">
+          <div className="premium-card hover-float hover-glow-intense group">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="text-2xl">💰</span>
               </div>
               <div>
                 <p className="text-sm text-foreground/60 font-medium">Top Category</p>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-gradient-success">
                   {expenseStats.length > 0 ? expenseStats[0]._id : 'N/A'}
                 </p>
               </div>
@@ -800,15 +801,15 @@ export default function Dashboard() {
         </div>
 
         {/* Activity Feed and Category Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="responsive-grid-1-2 lg:grid-cols-3 gap-responsive">
           {/* Recent Activity */}
-          <div className="lg:col-span-2 glass-card">
-            <h2 className="text-xl font-bold mb-6">Recent Activity</h2>
+          <div className="lg:col-span-2 premium-card hover-float">
+            <h2 className="text-xl font-bold mb-6 text-gradient-primary">Recent Activity</h2>
             <div className="space-y-4">
               {recentActivity.length > 0 ? (
                 recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center gap-4 pb-4 border-b border-white/10 last:border-0">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <div key={activity.id} className="flex items-center gap-4 pb-4 border-b border-border/30 last:border-0 hover:bg-background/30 rounded-lg p-2 transition-all hover-scale">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 hover-scale">
                       <span className="text-sm">{activity.icon}</span>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -820,7 +821,10 @@ export default function Dashboard() {
                   </div>
                 ))
               ) : (
-                <p className="text-foreground/60 text-center py-8">No recent activity</p>
+                <div className="empty-state-mobile py-8">
+                  <p className="empty-state-icon">📋</p>
+                  <p className="empty-state-text">No recent activity</p>
+                </div>
               )}
             </div>
           </div>
@@ -828,10 +832,10 @@ export default function Dashboard() {
 
         {/* Overdue Payments Notification Dialog */}
         <AlertDialog open={showNotificationDialog} onOpenChange={setShowNotificationDialog}>
-          <AlertDialogContent className="max-w-md">
+          <AlertDialogContent className="max-w-md glass-premium border border-border/30">
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <AlertCircle className="text-red-500" size={24} />
+              <AlertDialogTitle className="flex items-center gap-2 text-gradient-primary">
+                <AlertCircle className="text-red-500 animate-pulse" size={24} />
                 Overdue Payments Alert
               </AlertDialogTitle>
               <AlertDialogDescription>
@@ -839,9 +843,9 @@ export default function Dashboard() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             
-            <div className="space-y-3 max-h-64 overflow-y-auto">
+            <div className="space-y-3 max-h-64 overflow-y-auto scrollbar-modern">
               {overduePayments.map((payment) => (
-                <div key={payment._id} className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <div key={payment._id} className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover-scale">
                   <p className="font-semibold text-foreground">{payment.title}</p>
                   <p className="text-sm text-foreground/70">Amount: ₹{payment.amount.toLocaleString('en-IN')}</p>
                   <p className="text-xs text-red-500 mt-1">
@@ -851,7 +855,7 @@ export default function Dashboard() {
               ))}
             </div>
 
-            <AlertDialogAction onClick={() => setShowNotificationDialog(false)}>
+            <AlertDialogAction onClick={() => setShowNotificationDialog(false)} className="btn-gradient hover-scale">
               Acknowledge
             </AlertDialogAction>
           </AlertDialogContent>

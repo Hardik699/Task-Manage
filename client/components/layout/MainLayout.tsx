@@ -8,20 +8,22 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-background transition-colors duration-300 gradient-mesh">
       {/* Top Navbar */}
       <Sidebar />
 
-      {/* Main Content Area */}
-      <div className="md:ml-64 pt-16">
-        <main className="min-h-[calc(100vh-4rem)] pb-20 md:pb-8">
-          <div className="p-4 md:p-8 max-w-7xl mx-auto">
-            {children}
+      {/* Main Content Area - Enhanced Responsive */}
+      <div className="md:ml-64 pt-16 transition-all duration-300">
+        <main className="min-h-[calc(100vh-4rem)] mobile-safe-bottom">
+          <div className="container-wide">
+            <div className="animate-fade-in">
+              {children}
+            </div>
           </div>
         </main>
       </div>
 
-      {/* Bottom Navigation for Mobile */}
+      {/* Bottom Navigation for Mobile - Enhanced Touch Optimized */}
       <div className="md:hidden">
         <BottomNav />
       </div>

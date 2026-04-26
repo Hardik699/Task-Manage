@@ -331,3 +331,631 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 .hover-glow:hover {
   box-shadow: 0 8px 30px -5px hsl(var(--primary) / 0.3);
 }
+
+/* ============================================
+   RESPONSIVE UTILITIES & MOBILE-FIRST DESIGN
+   ============================================ */
+
+/* Touch-Friendly Interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Mobile touch targets - minimum 44x44px */
+  .btn, .btn-icon, button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .hover-lift:hover {
+    transform: none;
+  }
+  
+  /* Add active states for touch feedback */
+  .btn:active, .btn-icon:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+/* Enhanced Mobile Viewport */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific styles */
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 5rem);
+  }
+}
+
+/* Improved Focus Indicators for Accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Better Text Rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Enhanced Responsive Container Padding */
+.responsive-container {
+  @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+}
+
+/* Advanced Responsive Grid Layouts */
+.responsive-grid-1-2 {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+}
+
+.responsive-grid-1-2-3 {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+}
+
+.responsive-grid-1-2-4 {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6;
+}
+
+.responsive-grid-auto {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6;
+}
+
+/* Responsive Card Grid */
+.responsive-card-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+}
+
+/* Enhanced Responsive Text Sizes */
+.text-responsive-xs {
+  @apply text-xs sm:text-sm lg:text-base;
+}
+
+.text-responsive-sm {
+  @apply text-sm sm:text-base lg:text-lg;
+}
+
+.text-responsive-base {
+  @apply text-base sm:text-lg lg:text-xl;
+}
+
+.text-responsive-lg {
+  @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl;
+}
+
+.text-responsive-xl {
+  @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl;
+}
+
+.text-responsive-2xl {
+  @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl;
+}
+
+.text-responsive-3xl {
+  @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl;
+}
+
+/* Enhanced Responsive Spacing */
+.space-responsive-y {
+  @apply space-y-4 sm:space-y-6 lg:space-y-8 xl:space-y-10;
+}
+
+.gap-responsive {
+  @apply gap-3 sm:gap-4 lg:gap-6 xl:gap-8;
+}
+
+.p-responsive {
+  @apply p-4 sm:p-6 lg:p-8 xl:p-10;
+}
+
+.px-responsive {
+  @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+}
+
+.py-responsive {
+  @apply py-4 sm:py-6 lg:py-8 xl:py-10;
+}
+
+/* Enhanced Mobile-Optimized Cards */
+.mobile-card {
+  @apply modern-card p-4 sm:p-6 lg:p-8 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300;
+}
+
+.mobile-stat-card {
+  @apply stat-card p-4 sm:p-6 lg:p-8 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300;
+}
+
+/* Premium Card Variants */
+.premium-card {
+  @apply bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500;
+}
+
+.glass-premium {
+  @apply bg-background/60 backdrop-blur-2xl border border-border/30 shadow-2xl hover:shadow-3xl hover:bg-background/70 transition-all duration-300;
+}
+
+/* Responsive Buttons */
+.btn-responsive {
+  @apply btn px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base;
+}
+
+.btn-primary-responsive {
+  @apply btn-primary px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base;
+}
+
+/* Mobile Navigation Safe Area */
+.mobile-safe-bottom {
+  @apply pb-20 md:pb-8;
+}
+
+/* Responsive Flex Layouts */
+.flex-responsive {
+  @apply flex flex-col sm:flex-row gap-3 sm:gap-4;
+}
+
+.flex-responsive-reverse {
+  @apply flex flex-col-reverse sm:flex-row gap-3 sm:gap-4;
+}
+
+/* Responsive Modal/Dialog */
+.responsive-dialog {
+  @apply w-full max-w-[95vw] sm:max-w-md md:max-w-lg lg:max-w-xl;
+}
+
+/* Responsive Table */
+.responsive-table-wrapper {
+  @apply overflow-x-auto -mx-4 sm:mx-0;
+}
+
+.responsive-table {
+  @apply min-w-full text-sm;
+}
+
+.responsive-table th,
+.responsive-table td {
+  @apply px-3 py-2 sm:px-4 sm:py-3;
+}
+
+/* Hide/Show Based on Screen Size */
+.mobile-only {
+  @apply block sm:hidden;
+}
+
+.tablet-up {
+  @apply hidden sm:block;
+}
+
+.desktop-only {
+  @apply hidden lg:block;
+}
+
+/* Responsive Form Inputs */
+.input-responsive {
+  @apply input text-sm sm:text-base;
+}
+
+/* Improved Touch Scrolling */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Responsive Image Container */
+.responsive-img-container {
+  @apply relative w-full h-auto;
+}
+
+.responsive-img {
+  @apply w-full h-auto object-cover;
+}
+
+/* Mobile-Friendly Dropdown */
+.mobile-dropdown {
+  @apply fixed inset-x-0 bottom-0 sm:absolute sm:inset-auto sm:top-full sm:right-0 sm:left-auto;
+  @apply rounded-t-2xl sm:rounded-xl;
+  @apply max-h-[80vh] sm:max-h-96;
+}
+
+/* Responsive Chart Container */
+.responsive-chart {
+  @apply w-full h-64 sm:h-80 lg:h-96;
+}
+
+/* Stacked Layout for Mobile */
+.stack-mobile {
+  @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+}
+
+/* Responsive Badge */
+.badge-responsive {
+  @apply badge text-[10px] sm:text-xs px-2 sm:px-2.5;
+}
+
+/* Mobile-Optimized Sidebar Spacing */
+.sidebar-content {
+  @apply pt-16 md:ml-64;
+}
+
+/* Responsive Action Buttons Group */
+.action-buttons-mobile {
+  @apply flex flex-wrap gap-2 sm:gap-3;
+}
+
+.action-buttons-mobile > * {
+  @apply flex-1 min-w-[120px] sm:flex-initial sm:min-w-0;
+}
+
+/* Improved Focus States for Accessibility */
+.focus-visible-enhanced {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
+/* Responsive Overflow Handling */
+.overflow-responsive {
+  @apply overflow-x-auto sm:overflow-x-visible;
+}
+
+/* Mobile-Friendly List Items */
+.list-item-mobile {
+  @apply flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 sm:p-4;
+}
+
+/* Responsive Icon Sizes */
+.icon-responsive-sm {
+  @apply w-4 h-4 sm:w-5 sm:h-5;
+}
+
+.icon-responsive-md {
+  @apply w-5 h-5 sm:w-6 sm:h-6;
+}
+
+.icon-responsive-lg {
+  @apply w-6 h-6 sm:w-8 sm:h-8;
+}
+
+/* Enhanced Transitions for Smooth UX */
+.transition-smooth {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.transition-fast {
+  @apply transition-all duration-150 ease-in-out;
+}
+
+/* Responsive Padding for Content Areas */
+.content-padding {
+  @apply p-4 sm:p-6 md:p-8;
+}
+
+/* Mobile-Optimized Form Layout */
+.form-responsive {
+  @apply space-y-4 sm:space-y-6;
+}
+
+.form-row-responsive {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+}
+
+/* Responsive Header */
+.header-responsive {
+  @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+}
+
+.subheader-responsive {
+  @apply text-sm sm:text-base text-muted-foreground;
+}
+
+/* Mobile-Friendly Stats Display */
+.stat-value-responsive {
+  @apply text-xl sm:text-2xl lg:text-3xl font-bold;
+}
+
+.stat-label-responsive {
+  @apply text-xs sm:text-sm text-muted-foreground;
+}
+
+/* Improved Mobile Menu */
+.mobile-menu {
+  @apply fixed inset-0 z-50 bg-background/95 backdrop-blur-lg;
+  @apply flex flex-col;
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Divider */
+.divider-responsive {
+  @apply my-4 sm:my-6 lg:my-8 border-t border-border;
+}
+
+/* Mobile-Optimized Empty States */
+.empty-state-mobile {
+  @apply flex flex-col items-center justify-center p-8 sm:p-12 text-center;
+}
+
+.empty-state-icon {
+  @apply text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4;
+}
+
+.empty-state-text {
+  @apply text-sm sm:text-base text-muted-foreground;
+}
+
+/* ============================================
+   MODERN UI ENHANCEMENTS & EFFECTS
+   ============================================ */
+
+/* Advanced Gradient Backgrounds */
+.gradient-mesh {
+  background: radial-gradient(circle at 20% 80%, hsl(var(--primary) / 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, hsl(var(--accent) / 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, hsl(var(--secondary) / 0.1) 0%, transparent 50%);
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  padding: 1px;
+  border-radius: 12px;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: hsl(var(--card));
+  border-radius: 11px;
+  z-index: -1;
+}
+
+/* Enhanced Hover Effects */
+.hover-scale {
+  @apply transition-transform duration-300 hover:scale-105 active:scale-95;
+}
+
+.hover-float {
+  @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl;
+}
+
+.hover-glow-intense {
+  @apply transition-all duration-300;
+}
+
+.hover-glow-intense:hover {
+  box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2);
+}
+
+/* Modern Loading States */
+.loading-shimmer {
+  background: linear-gradient(90deg, 
+    hsl(var(--muted)) 25%, 
+    hsl(var(--muted-foreground) / 0.1) 50%, 
+    hsl(var(--muted)) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Enhanced Button Variants */
+.btn-gradient {
+  @apply btn bg-gradient-to-r from-primary via-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:shadow-primary/30 transition-all duration-300;
+}
+
+.btn-glass {
+  @apply btn bg-background/20 backdrop-blur-xl border border-border/50 hover:bg-background/30 hover:border-border transition-all duration-300;
+}
+
+.btn-outline-gradient {
+  @apply btn bg-transparent border-2 border-transparent bg-gradient-to-r from-primary to-purple-500 bg-clip-padding hover:shadow-lg hover:shadow-primary/20 transition-all duration-300;
+  background-image: linear-gradient(hsl(var(--background)), hsl(var(--background))), 
+                    linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Advanced Card Effects */
+.card-hover-lift {
+  @apply transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary/10;
+}
+
+.card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.card-tilt:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+}
+
+/* Micro-interactions */
+.pulse-on-hover:hover {
+  animation: pulse 1s infinite;
+}
+
+.bounce-on-click:active {
+  animation: bounce 0.3s ease;
+}
+
+/* Enhanced Status Indicators */
+.status-dot {
+  @apply w-2 h-2 rounded-full animate-pulse;
+}
+
+.status-online {
+  @apply status-dot bg-success shadow-lg shadow-success/50;
+}
+
+.status-offline {
+  @apply status-dot bg-muted-foreground;
+}
+
+.status-warning {
+  @apply status-dot bg-warning shadow-lg shadow-warning/50;
+}
+
+.status-error {
+  @apply status-dot bg-destructive shadow-lg shadow-destructive/50;
+}
+
+/* Modern Progress Indicators */
+.progress-modern {
+  @apply relative h-2 w-full overflow-hidden rounded-full bg-secondary/30;
+}
+
+.progress-bar-modern {
+  @apply h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-700 ease-out rounded-full;
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+}
+
+/* Enhanced Typography */
+.text-gradient-primary {
+  @apply bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent font-bold;
+}
+
+.text-gradient-success {
+  @apply bg-gradient-to-r from-success to-emerald-400 bg-clip-text text-transparent font-semibold;
+}
+
+.text-gradient-warning {
+  @apply bg-gradient-to-r from-warning to-orange-400 bg-clip-text text-transparent font-semibold;
+}
+
+/* Advanced Layout Utilities */
+.container-fluid {
+  @apply w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16;
+}
+
+.container-narrow {
+  @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.container-wide {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+}
+
+/* Modern Scrollbars */
+.scrollbar-modern {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Enhanced Mobile Optimizations */
+@media (max-width: 640px) {
+  .mobile-full-width {
+    @apply w-full;
+  }
+  
+  .mobile-center {
+    @apply mx-auto text-center;
+  }
+  
+  .mobile-stack {
+    @apply flex flex-col space-y-3;
+  }
+  
+  .mobile-hide {
+    @apply hidden;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid-2 {
+    @apply grid-cols-2;
+  }
+  
+  .tablet-text-lg {
+    @apply text-lg;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1025px) {
+  .desktop-grid-4 {
+    @apply grid-cols-4;
+  }
+  
+  .desktop-text-xl {
+    @apply text-xl;
+  }
+  
+  .desktop-hover-effects:hover {
+    @apply transform -translate-y-1 shadow-2xl;
+  }
+}
+
+/* ============================================
+   ENHANCED RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .ultra-wide-container {
+    @apply max-w-screen-2xl mx-auto;
+  }
+  
+  .ultra-wide-grid {
+    @apply grid-cols-6;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode specific enhancements */
+@media (prefers-color-scheme: dark) {
+  .auto-dark-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Light mode specific enhancements */
+@media (prefers-color-scheme: light) {
+  .auto-light-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+}

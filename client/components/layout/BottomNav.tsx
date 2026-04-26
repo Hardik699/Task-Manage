@@ -30,20 +30,29 @@ export const BottomNav: React.FC = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 md:hidden glass border-t border-white/10 z-40">
-      <div className="flex justify-around h-20">
+    <nav className="fixed bottom-0 left-0 right-0 md:hidden glass-premium border-t border-border/30 z-40 safe-area-inset-bottom backdrop-blur-2xl">
+      <div className="flex justify-around h-16 sm:h-18">
         {navItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`flex flex-col items-center justify-center flex-1 transition-colors duration-200 ${
+            className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 hover-scale relative ${
               isActive(item.path)
-                ? 'text-primary dark:text-primary'
-                : 'text-foreground/50 hover:text-foreground'
+                ? 'text-primary'
+                : 'text-foreground/50 hover:text-foreground active:text-foreground/70'
             }`}
           >
-            {item.icon}
-            <span className="text-xs mt-1 font-medium">{item.label}</span>
+            <div className={`transition-all duration-300 ${isActive(item.path) ? 'scale-110 animate-bounce-subtle' : ''}`}>
+              {item.icon}
+            </div>
+            <span className={`text-[10px] sm:text-xs mt-1 font-medium transition-all duration-300 ${
+              isActive(item.path) ? 'font-semibold text-primary' : ''
+            }`}>
+              {item.label}
+            </span>
+            {isActive(item.path) && (
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-primary to-purple-500 rounded-t-full shadow-lg shadow-primary/50" />
+            )}
           </Link>
         ))}
       </div>
