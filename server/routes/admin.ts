@@ -6,6 +6,7 @@ import {
   getUserLogs,
   deleteUser,
   impersonateUser,
+  updateUserRole,
   getAdminStats,
 } from '../controllers/admin';
 import { verifyToken } from '../middleware/auth';
@@ -20,6 +21,7 @@ router.use(adminOnly);
 router.get('/stats', getAdminStats);
 router.get('/users', getAllUsers);
 router.get('/users/:userId', getUserById);
+router.put('/users/:userId/role', updateUserRole);
 router.get('/users/:userId/logs', getUserLogs);
 router.delete('/users/:userId', deleteUser);
 router.post('/users/:userId/impersonate', impersonateUser);

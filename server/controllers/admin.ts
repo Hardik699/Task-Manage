@@ -169,6 +169,52 @@ export const impersonateUser = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const updateUserRole = async (req: AuthRequest, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { role } = req.body;
+
+    // Validate role
+    if (!['user', 'superadmin'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Must be "user" or "superadmin"' });
+    }
+
+    // Prevent changing own role
+    if (userId === req.userId) {
+      return res.status(400).json({ error: 'Cannot change your own role' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { role },
+      { new: true }
+    ).select('-passwordHash');
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await logActivity(req, {
+      action: 'UPDATE',
+      entity: 'user',
+      entityId: userId,
+      details: { 
+        action: 'role_updated',
+        username: user.username,
+        newRole: role 
+      },
+    });
+
+    return res.json({ 
+      message: `User role updated to ${role} successfully`,
+      user 
+    });
+  } catch (error) {
+    console.error('Update user role error:', error);
+    return res.status(500).json({ error: 'Failed to update user role' });
+  }
+};
+
 export const getAdminStats = async (req: AuthRequest, res: Response) => {
   try {
     const totalUsers = await User.countDocuments();

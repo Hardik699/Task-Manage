@@ -63,6 +63,53 @@ export async function createServer() {
     }
   }
 
+  // Special admin setup endpoint (public but requires admin key)
+  app.post("/api/setup/make-admin", requireDB, async (req, res) => {
+    try {
+      const { email, adminKey } = req.body;
+
+      // Simple security check
+      const expectedAdminKey = process.env.ADMIN_SETUP_KEY || 'make-admin-2024';
+      
+      if (adminKey !== expectedAdminKey) {
+        return res.status(401).json({ error: 'Invalid admin key' });
+      }
+
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+
+      const { User } = await import('./models/User');
+      
+      const user = await User.findOne({ email: email.toLowerCase() });
+
+      if (!user) {
+        return res.status(404).json({ error: `User with email "${email}" not found` });
+      }
+
+      if (user.role === 'superadmin') {
+        return res.json({ 
+          message: `User "${email}" is already a superadmin`,
+          user: user.toJSON()
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { role: 'superadmin' },
+        { new: true }
+      ).select('-passwordHash');
+
+      return res.json({ 
+        message: `Successfully made "${email}" a superadmin`,
+        user: updatedUser
+      });
+    } catch (error) {
+      console.error('Make user admin error:', error);
+      return res.status(500).json({ error: 'Failed to make user admin' });
+    }
+  });
+
   // API Routes (protected with DB check)
   app.use("/api/auth", requireDB, authRoutes);
   app.use("/api/tasks", requireDB, taskRoutes);

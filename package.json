@@ -10,7 +10,9 @@
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "make-admin": "tsx server/scripts/makeAdmin.ts",
+    "manage-user-role": "tsx server/scripts/manageUserRole.ts"
   },
   "dependencies": {
     "@types/express": "4.17.21",
