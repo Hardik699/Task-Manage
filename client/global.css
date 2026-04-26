@@ -913,8 +913,95 @@ body {
 }
 
 /* ============================================
-   ENHANCED RESPONSIVE BREAKPOINTS
+   LOGIN PAGE MOBILE OPTIMIZATIONS
    ============================================ */
+
+/* Mobile-First Login Layout */
+.login-container {
+  @apply min-h-screen flex flex-col lg:flex-row;
+}
+
+.login-form-container {
+  @apply flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-auto;
+}
+
+.login-form-wrapper {
+  @apply w-full max-w-sm sm:max-w-md animate-slide-up;
+}
+
+/* Mobile-Optimized Form Elements */
+.login-input {
+  @apply input w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-3.5 bg-background/60 backdrop-blur-sm border-border/50 focus:border-primary/50 hover:border-primary/30 transition-all rounded-xl text-sm sm:text-base;
+}
+
+.login-input-with-icon-right {
+  @apply login-input pr-10 sm:pr-12;
+}
+
+.login-input-icon-left {
+  @apply absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-foreground/40 transition-colors;
+}
+
+.login-input-icon-right {
+  @apply absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground transition-colors hover-scale p-1;
+}
+
+.login-button {
+  @apply w-full btn-gradient py-3 sm:py-3.5 px-6 font-semibold text-base sm:text-lg rounded-xl hover-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-h-[48px] sm:min-h-[52px];
+}
+
+.login-social-button {
+  @apply w-full glass-premium py-3 sm:py-3.5 px-6 rounded-xl font-medium transition-all hover-scale border border-border/30 min-h-[48px] sm:min-h-[52px];
+}
+
+/* Mobile Logo Styling */
+.mobile-logo {
+  @apply lg:hidden w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-purple-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl sm:text-2xl mb-4 sm:mb-6 mx-auto shadow-lg shadow-primary/30 hover-scale;
+}
+
+/* Responsive Remember/Forgot Section */
+.login-remember-forgot {
+  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 text-sm;
+}
+
+/* Mobile-Safe Touch Targets */
+@media (max-width: 640px) {
+  .login-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Ensure form elements are touch-friendly */
+  .login-input,
+  .login-button,
+  .login-social-button {
+    min-height: 48px;
+  }
+  
+  /* Improve spacing on mobile */
+  .login-form-spacing {
+    @apply space-y-4;
+  }
+  
+  /* Mobile-specific text sizes */
+  .login-mobile-text {
+    @apply text-sm;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .login-tablet-spacing {
+    @apply space-y-5;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  .login-desktop-spacing {
+    @apply space-y-6;
+  }
+}
 
 /* Ultra-wide screens */
 @media (min-width: 1920px) {
